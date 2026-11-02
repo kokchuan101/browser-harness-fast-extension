@@ -13,7 +13,7 @@ Before: browser-harness              After: with fast_all.py
 └───────────────┬──────────────┘     │ list (1 call)                │
 ┌───────────────▼──────────────┐     └───────────────┬──────────────┘
 │ Get the position of each     │     ┌───────────────▼──────────────┐
-│ control (1 call each)        │     │ The LLM selects an element   │  replaces a paid classifier
+│ control (1 call each)        │     │ The LLM selects an element   │  replaces paid Jev
 └───────────────┬──────────────┘     │ by number                    │
 ┌───────────────▼──────────────┐     └───────────────┬──────────────┘
 │ The LLM selects from         │     ┌───────────────▼──────────────┐
@@ -34,7 +34,7 @@ Before: browser-harness              After: with fast_all.py
 | Step | browser-harness alone | With `fast_all.py` | From |
 |---|---|---|---|
 | Read | Accessibility tree, then one position lookup per control | `snapshot()`: one call, a numbered list | jev-ultrafast |
-| Choose | The LLM selects from a long list | The LLM selects an element by number. Haiku is enough. Use a stronger LLM if it fails | Replaces jev-ultrafast's paid classifier |
+| Choose | The LLM selects from a long list | The LLM selects an element by number. Haiku is enough. Use a stronger LLM if it fails | Replaces jev-ultrafast's paid Jev |
 | Act | `click_at_xy(x, y)` | `click_idx(n)`: checks the control first | jev-ultrafast |
 | Wait | Nothing built in: the agent sleeps or polls | `settle()`: two animation frames | jev-ultrafast |
 | Miss | The agent retries by hand | `click_name()`: one exact match or no click | New |
