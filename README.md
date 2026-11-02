@@ -13,7 +13,7 @@ Before: browser-harness              After: with fast_all.py
 │                              │     │ list (1 call)                │
 └───────────────┬──────────────┘     └───────────────┬──────────────┘
 ┌───────────────▼──────────────┐     ┌───────────────▼──────────────┐
-│ The LLM selects from         │     │ The LLM selects an element   │
+│ The LLM selects from         │     │ The LLM selects an element   │  replaces paid Jev
 │ a long list                  │     │ by index (Haiku or a         │
 │                              │     │ stronger LLM)                │
 └───────────────┬──────────────┘     └───────────────┬──────────────┘
