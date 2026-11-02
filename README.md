@@ -13,17 +13,17 @@ Before: browser-harness              After: with fast_all.py
 └───────────────┬──────────────┘     │ list (1 call)                │
 ┌───────────────▼──────────────┐     └───────────────┬──────────────┘
 │ Get the position of each     │     ┌───────────────▼──────────────┐
-│ control (1 call each)        │     │ Haiku selects a number       │  replaces a paid model
-└───────────────┬──────────────┘     └───────────────┬──────────────┘
-┌───────────────▼──────────────┐     ┌───────────────▼──────────────┐
-│ The model selects from       │     │ Make sure that the control   │  from jev-ultrafast
-│ a long list                  │     │ is clear. Then click it.     │
-└───────────────┬──────────────┘     └───────────────┬──────────────┘
-┌───────────────▼──────────────┐     ┌───────────────▼──────────────┐
-│ Click at the position        │     │ Wait until the page draws    │  from jev-ultrafast
-└───────────────┬──────────────┘     └──────────────────────────────┘
-┌───────────────▼──────────────┐
-│ Wait a fixed time            │
+│ control (1 call each)        │     │ The model selects an element │  replaces a paid model
+└───────────────┬──────────────┘     │ (Haiku, or a stronger model  │
+┌───────────────▼──────────────┐     │ if Haiku fails)              │
+│ The model selects from       │     └───────────────┬──────────────┘
+│ a long list                  │     ┌───────────────▼──────────────┐
+└───────────────┬──────────────┘     │ Make sure that the control   │  from jev-ultrafast
+┌───────────────▼──────────────┐     │ is clear. Then click it.     │
+│ Click at the position        │     └───────────────┬──────────────┘
+└───────────────┬──────────────┘     ┌───────────────▼──────────────┐
+┌───────────────▼──────────────┐     │ Wait until the page draws    │  from jev-ultrafast
+│ Wait a fixed time            │     └──────────────────────────────┘
 └──────────────────────────────┘
 
 178 to 1,672 calls, 0.3 to 10 s      1 call, 5 to 19 ms
@@ -34,11 +34,12 @@ Before: browser-harness              After: with fast_all.py
 | Step | browser-harness alone | With `fast_all.py` | From |
 |---|---|---|---|
 | Read | Accessibility tree, then one position lookup per control | `snapshot()`: one call, a numbered list | jev-ultrafast |
-| Choose | The model picks from a long list | Your model answers with a number | Replaces jev-ultrafast's paid model |
+| Choose | The model selects from a long list | The model selects an element by number: Haiku, or a stronger model if Haiku fails | Replaces jev-ultrafast's paid model |
 | Act | `click_at_xy(x, y)` | `click_idx(n)`: checks the control first | jev-ultrafast |
 | Wait | Nothing built in: the agent sleeps or polls | `settle()`: two animation frames | jev-ultrafast |
 | Miss | The agent retries by hand | `click_name()`: one exact match or no click | New |
 | Last resort | | The accessibility tree, as before | browser-harness |
+| Coverage | Full accessibility data, also shadow DOM and iframes | Common HTML and ARIA controls; the accessibility tree for the rest | Trade-off |
 
 Your `browser-harness` command stays as it is. The helpers live in your agent workspace, next to your own.
 

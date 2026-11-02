@@ -52,7 +52,7 @@ for f in $SKILL_FILES; do
 `fast_all.py` in the agent workspace adds these helpers. Use them before the accessibility-tree route in "Page Workflow".
 
 - Read the page with `print(snapshot())`. One call returns the visible controls as numbered lines, `[n] role "name" =value state`, then the visible text.
-- Let Haiku choose. Give the snapshot and the goal to a Haiku subagent and ask for one line: the number `[n]` to use next, `DONE`, or `STUCK`. Use each answer once. The answer is only ever a number, never a selector or code.
+- Let a small model select the element. Give the snapshot and the goal to a Haiku subagent and ask for one line: the number `[n]` to use next, `DONE`, or `STUCK`. If Haiku answers `STUCK` or selects the wrong element, ask a stronger model the same question. Use each answer once. The answer is only ever a number, never a selector or code.
 - Act with `click_idx(n)` or `type_idx(n, "text", enter=True)`. If the control is gone, disabled or covered, nothing is clicked: take a new snapshot.
 - Wait with `settle()` after input, or `wait_until("<js condition>")` for data, never a fixed sleep. Take a new snapshot after each action.
 - `click_name(name)` and `click_text(text)` click by exact name or text. A `[fast recovered] ...` line means the target was found another way; check that step. They click only when exactly one control matches.
