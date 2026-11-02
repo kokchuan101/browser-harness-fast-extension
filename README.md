@@ -2,8 +2,10 @@
 
 fast-browser-harness makes [browser-harness](https://github.com/browser-use/browser-harness) agents read pages
 faster. One file, `fast_all.py`, adds helpers that read a page in one browser call and click by number. On three
-public pages, one look took 5 to 19 ms and one call. The accessibility-tree route took 0.3 to 10 seconds and 178 to
-1,672 calls. The LLM only has to answer with a number, so a small LLM such as Claude Haiku can do it.
+public pages, the indexed list of every control with its position took 5 to 19 ms and one call. The same list
+through the accessibility tree took 0.3 to 10 seconds and 178 to 1,672 calls. The tree alone already has
+thousands of nodes for the agent to filter. The LLM only has to answer with a number. Haiku is often enough. Use a
+stronger LLM if it fails.
 
 ```text
 Before: browser-harness              After: with fast_all.py
@@ -18,30 +20,31 @@ Before: browser-harness              After: with fast_all.py
 │                              │     │ stronger LLM)                │
 └───────────────┬──────────────┘     └───────────────┬──────────────┘
 ┌───────────────▼──────────────┐     ┌───────────────▼──────────────┐
-│ Get the position of each     │     │ Make sure that the control   │  from jev-ultrafast
-│ control (1 call each)        │     │ is clear. Then click it.     │
+│ Get the position of the      │     │ Check it is the same control │  from jev-ultrafast
+│ chosen control (1 call)      │     │ and nothing covers it.       │
+│                              │     │ Then click it.               │
 └───────────────┬──────────────┘     └───────────────┬──────────────┘
 ┌───────────────▼──────────────┐     ┌───────────────▼──────────────┐
 │ Click at the position        │     │ Wait until the page draws    │  from jev-ultrafast
 └───────────────┬──────────────┘     └──────────────────────────────┘
 ┌───────────────▼──────────────┐
-│ Wait a fixed time            │
+│ No built-in wait after a     │
+│ click (the agent sleeps      │
+│ or polls)                    │
 └──────────────────────────────┘
-
-178 to 1,672 calls, 0.3 to 10 s      1 call, 5 to 19 ms
 ```
 
 ## What it changes
 
 | Step | browser-harness alone | With `fast_all.py` | From |
 |---|---|---|---|
-| Read | Accessibility tree, then one position lookup per control | `snapshot()`: one call, a numbered list | jev-ultrafast |
-| Choose | The LLM selects from a long list | The LLM selects an element by index. Haiku is enough. Use a stronger LLM if it fails | Replaces jev-ultrafast's paid Jev |
+| Read | Accessibility tree (the agent filters it), then a position lookup for the chosen control | `snapshot()`: one call, a numbered list | jev-ultrafast |
+| Choose | The LLM selects from a long list | The LLM selects an element by index. Haiku is often enough. Use a stronger LLM if it fails | Replaces jev-ultrafast's paid Jev |
 | Act | `click_at_xy(x, y)` | `click_idx(n)`: checks the control first | jev-ultrafast |
-| Wait | Nothing built in: the agent sleeps or polls | `settle()`: two animation frames | jev-ultrafast |
-| Miss | The agent retries by hand | `click_name()`: one exact match or no click | New |
+| Wait | Nothing built in after a click: the agent sleeps or polls | `settle()`: two animation frames, at most 50 ms, with focus emulation so a background tab still draws. `wait_until(js)` for data that loads | jev-ultrafast |
+| Miss | The agent retries by hand | `click_name()`, `click_text()`: on a miss, more time under load, the same name in another case, the visible text, then the accessibility tree. They click only on exactly one match and print a `[fast recovered]` line | New |
 | Last resort | | The accessibility tree, as before | browser-harness |
-| Coverage | Full accessibility data, also shadow DOM and iframes | Common HTML and ARIA controls; the accessibility tree for the rest | Trade-off |
+| Coverage | Full accessibility data, including shadow DOM | Common HTML and ARIA controls. The accessibility tree for the rest | Trade-off |
 
 Your `browser-harness` command stays as it is. The helpers live in your agent workspace, next to your own.
 
