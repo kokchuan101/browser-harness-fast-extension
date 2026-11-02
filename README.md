@@ -1,56 +1,20 @@
 # fast-browser-harness
 
-fast-browser-harness makes [browser-harness](https://github.com/browser-use/browser-harness) agents read pages
-faster. One file, `fast_helpers.py`, adds helpers that read a page in one browser call and click by number. On three
-public pages, the indexed list of every control with its position took 5 to 19 ms and one call. The same list
-through the accessibility tree took 0.3 to 10 seconds and 178 to 1,672 calls. The tree alone already has
-thousands of nodes for the agent to filter. The LLM only has to answer with a number. Haiku is often enough. Use a
-stronger LLM if it fails.
+This is an extension of [browser-harness](https://github.com/browser-use/browser-harness) that adds the
+[jev-ultrafast](https://github.com/browser-use/jev-ultrafast) mechanism. The installation extends your current
+browser-harness and offers to create helpers for your specific tests. It can only get faster from here.
 
-Whole tasks, run by a Haiku agent with and without `fast_helpers.py`:
-
-| Task | Without | With | Runs |
-|---|---|---|---|
-| Follow links three pages deep on Wikipedia | 73 to 86 s, 17 to 20 tool calls | 21 to 25 s, 8 tool calls | 2 each |
-| Build a 6-block workflow in a canvas web app | 578 s, 230k tokens, 125 tool calls | 491 s, 159k tokens, 99 tool calls | 1 each |
-
-```text
-Before: browser-harness              After: with fast_helpers.py
-
-┌──────────────────────────────┐     ┌──────────────────────────────┐
-│ Read the full A11y tree      │     │ Read the DOM as an indexed   │  from jev-ultrafast
-│                              │     │ list (1 call)                │
-└───────────────┬──────────────┘     └───────────────┬──────────────┘
-┌───────────────▼──────────────┐     ┌───────────────▼──────────────┐
-│ The LLM selects from         │     │ The LLM selects an element   │  replaces paid Jev
-│ a long list                  │     │ by index (Haiku or a         │
-│                              │     │ stronger LLM)                │
-└───────────────┬──────────────┘     └───────────────┬──────────────┘
-┌───────────────▼──────────────┐     ┌───────────────▼──────────────┐
-│ Get the position of the      │     │ Check it is the same control │  from jev-ultrafast
-│ chosen control (1 call)      │     │ and nothing covers it.       │
-│                              │     │ Then click it.               │
-└───────────────┬──────────────┘     └───────────────┬──────────────┘
-┌───────────────▼──────────────┐     ┌───────────────▼──────────────┐
-│ Click at the position        │     │ Wait until the page draws    │  from jev-ultrafast
-└───────────────┬──────────────┘     └──────────────────────────────┘
-┌───────────────▼──────────────┐
-│ No built-in wait after a     │
-│ click (the agent sleeps      │
-│ or polls)                    │
-└──────────────────────────────┘
-```
+Note: it modifies your current browser-harness. The installation backs it up first, just in case.
 
 ## What it changes
 
-| Step | browser-harness alone | With `fast_helpers.py` | From |
+| Step | browser-harness | With `fast_helpers.py` | From |
 |---|---|---|---|
-| Read | Accessibility tree (the agent filters it), then a position lookup for the chosen control | `snapshot()`: one call, a numbered list | jev-ultrafast |
-| Choose | The LLM selects from a long list | The LLM selects an element by index. Haiku is often enough. Use a stronger LLM if it fails | Replaces jev-ultrafast's paid Jev |
-| Act | `click_at_xy(x, y)` | `click_idx(n)`: checks the control first | jev-ultrafast |
-| Wait | Nothing built in after a click: the agent sleeps or polls | `settle()`: two animation frames, at most 50 ms, with focus emulation so a background tab still draws. `wait_until(js)` for data that loads | jev-ultrafast |
-| Miss | The agent retries by hand | `click_name()`, `click_text()`: on a miss, more time under load, the same words in another case, the visible text or the accessible name, then the accessibility tree. They click only on exactly one match and print a `[fast recovered]` line | New |
-| Last resort | | The accessibility tree, as before | browser-harness |
+| Read | Read the full A11y tree, then get the position of the chosen control | `snapshot()`: read the DOM as an indexed list, in 1 call | jev-ultrafast |
+| Choose | The LLM selects from a long list | The LLM selects an element by index: Haiku, or a stronger LLM if Haiku fails | Replaces jev-ultrafast's paid Jev |
+| Act | `click_at_xy(x, y)` at that position | `click_idx(n)`: checks it is the same control and nothing covers it, then clicks | jev-ultrafast |
+| Wait | No built-in wait after a click. The agent sleeps or polls | `settle()`: waits until the page draws (two animation frames, at most 50 ms, with focus emulation so a background tab still draws). `wait_until(js)` for data that loads | jev-ultrafast |
+| Miss | The agent retries by hand | `click_name()`, `click_text()`: on a miss, more time under load, the same words in another case, the visible text or the accessible name, then the accessibility tree as before. They click only on exactly one match and print a `[fast recovered]` line | New |
 | Coverage | Full accessibility data, including shadow DOM | Common HTML and ARIA controls. The accessibility tree for the rest | Trade-off |
 
 Your `browser-harness` command stays as it is. The helpers live in your agent workspace, next to your own.
