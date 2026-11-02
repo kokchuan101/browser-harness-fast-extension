@@ -9,7 +9,7 @@ public pages, one look took 5 to 19 ms and one call. The accessibility-tree rout
 Before: browser-harness              After: with fast_all.py
 
 ┌──────────────────────────────┐     ┌──────────────────────────────┐
-│ Read the full page tree      │     │ Read the page as a numbered  │  from jev-ultrafast
+│ Read the full A11y tree      │     │ Read the DOM as an indexed   │  from jev-ultrafast
 │                              │     │ list (1 call)                │
 └───────────────┬──────────────┘     └───────────────┬──────────────┘
 ┌───────────────▼──────────────┐     ┌───────────────▼──────────────┐
