@@ -9,28 +9,28 @@ Note: it modifies your current browser-harness. The installation backs it up fir
 ## What it changes
 
 ```text
-        browser-harness                  with fast_helpers.py
+        Before: browser-harness          After: with fast_helpers.py
 
         ┌────────────────────────────┐   ┌────────────────────────────┐
-Read    │ Read the full A11y tree,   │   │ snapshot(): read the DOM   │  from jev-ultrafast
-        │ then get the position of   │   │ as an indexed list (1      │
-        │ the chosen control         │   │ call)                      │
+Read    │ Read the full A11y tree    │   │ Read the DOM as an indexed │  from jev-ultrafast
+        │                            │   │ list (1 call)              │
         └──────────────┬─────────────┘   └──────────────┬─────────────┘
         ┌──────────────▼─────────────┐   ┌──────────────▼─────────────┐
 Choose  │ The LLM selects from a     │   │ The LLM selects an element │  replaces paid Jev
-        │ long list                  │   │ by index (Haiku, or a      │
-        │                            │   │ stronger LLM if it fails)  │
+        │ long list                  │   │ by index (Haiku or a       │
+        │                            │   │ stronger LLM)              │
         └──────────────┬─────────────┘   └──────────────┬─────────────┘
         ┌──────────────▼─────────────┐   ┌──────────────▼─────────────┐
-Act     │ click_at_xy(x, y) at that  │   │ click_idx(n): check it is  │  from jev-ultrafast
-        │ position                   │   │ the same control and       │
-        │                            │   │ nothing covers it. Then    │
-        │                            │   │ click it.                  │
+Act     │ Get the position of the    │   │ Check it is the same       │  from jev-ultrafast
+        │ chosen control (1 call)    │   │ control and nothing covers │
+        └──────────────┬─────────────┘   │ it. Then click it.         │
+        ┌──────────────▼─────────────┐   │                            │
+        │ Click at the position      │   │                            │
         └──────────────┬─────────────┘   └──────────────┬─────────────┘
         ┌──────────────▼─────────────┐   ┌──────────────▼─────────────┐
-Wait    │ No built-in wait after a   │   │ settle(): wait until the   │  from jev-ultrafast
-        │ click. The agent sleeps or │   │ page draws. wait_until(js) │
-        │ polls.                     │   │ for data that loads.       │
+Wait    │ No built-in wait after a   │   │ Wait until the page draws  │  from jev-ultrafast
+        │ click (the agent sleeps or │   │                            │
+        │ polls)                     │   │                            │
         └──────────────┬─────────────┘   └──────────────┬─────────────┘
         ┌──────────────▼─────────────┐   ┌──────────────▼─────────────┐
 Miss    │ The agent retries by hand  │   │ click_name(),              │  new
