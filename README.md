@@ -51,7 +51,8 @@ Your `browser-harness` command stays as it is. The helpers live in your agent wo
 ## Install
 
 Install makes an exact backup of your agent workspace first and checks it. It changes nothing unless the backup is
-in place. Two files change, both in your browser-harness agent workspace:
+in place. The install can also help you write helpers for your own app, built on `fast_all.py`, in your own
+`agent_helpers.py`. Two files change, both in your browser-harness agent workspace:
 
 ```text
 ~/.config/browser-harness/          ($BH_AGENT_WORKSPACE, if you set it, replaces agent-workspace/)
@@ -70,6 +71,17 @@ bash exactly as it is, without changing it. It backs up my agent workspace to ag
 before it changes anything. If it prints "stopped", tell me why and change nothing. Then prove it works: open
 https://en.wikipedia.org with browser-harness, print snapshot(), click the search box with click_idx, and tell me
 what you saw.
+
+When the check passes, ask me: "Do you want helpers for the web app you test day to day?" If I say no, stop.
+If yes:
+1. Read my agent_helpers.py and list the helpers I already have. Reuse them; do not write a second version.
+2. Ask me for the app's URL, how I log in, and two or three flows I test often.
+3. Run each flow once with my browser-harness, using my helpers where they fit and snapshot(), click_idx(n)
+   and wait_until(js) for the rest. Note the steps that repeat and the places where a click or wait failed.
+4. Add helpers only for those steps, in agent_helpers.py with an <app>_ prefix, built on snapshot(),
+   click_name() and wait_until(). If one of my helpers sleeps for a fixed time or clicks by coordinates, offer
+   to switch it to wait_until() or click_name(), and change it only if I say yes. Never edit fast_all.py.
+5. Run the flows again, and show me the time and tool calls before and after.
 ```
 
 ## Revert
