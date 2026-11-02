@@ -28,8 +28,8 @@ Act     │ Get the position of the    │   │ Check it is the same       │ 
         │ Click at the position      │   │                            │
         └──────────────┬─────────────┘   └──────────────┬─────────────┘
         ┌──────────────▼─────────────┐   ┌──────────────▼─────────────┐
-Wait    │ No built-in wait after a   │   │ Wait until the page draws  │  from jev-ultrafast
-        │ click (the agent sleeps or │   │                            │
+Wait    │ No built-in wait after a   │   │ Wait until the page        │  from jev-ultrafast
+        │ click (the agent sleeps or │   │ renders                    │
         │ polls)                     │   │                            │
         └──────────────┬─────────────┘   └──────────────┬─────────────┘
         ┌──────────────▼─────────────┐   ┌──────────────▼─────────────┐
