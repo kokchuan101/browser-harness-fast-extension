@@ -53,15 +53,19 @@ Your `browser-harness` command stays as it is. The helpers live in your agent wo
 
 ## Install
 
-Install makes an exact backup of your agent workspace first and checks it. It changes nothing unless the backup is
-in place. Two files change, both in your browser-harness agent workspace:
+Install backs up everything it will touch first, checks that each copy is identical, and changes nothing until the
+backups are in place. It adds two things to your agent workspace and one section to your browser-harness skill:
 
 ```text
-~/.config/browser-harness/          ($BH_AGENT_WORKSPACE, if you set it, replaces agent-workspace/)
-├── agent-workspace/
-│   ├── agent_helpers.py            your helpers, plus one load line added at the end
-│   └── fast_all.py                 new: the helpers from this repository
-└── agent-workspace.bak/            new: the backup, an identical copy made before any change
+~/.config/browser-harness/
+├── agent-workspace/                  ($BH_AGENT_WORKSPACE, if you set it)
+│   ├── agent_helpers.py              + one load line at the end
+│   └── fast_all.py                   new: the helpers
+└── agent-workspace.bak/              backup: identical copy made before any change
+
+~/.claude/skills/browser-harness/     (and ~/.codex/skills/browser-harness/, if you use Codex)
+├── SKILL.md                          + a "Fast page reading" section: read with the map, let Haiku choose
+└── SKILL.md.bak                      backup: identical copy made before any change
 ```
 
 Paste this into Claude Code:
@@ -69,33 +73,24 @@ Paste this into Claude Code:
 ```text
 Install fast-browser-harness into my browser-harness. Download
 https://raw.githubusercontent.com/<owner>/fast-browser-harness/main/install.sh, show it to me, then run it with
-bash exactly as it is, without changing it. It backs up my agent workspace to agent-workspace.bak and checks the copy
-before it changes anything. If it prints "stopped", tell me why and change nothing. Then prove it works: open
-https://en.wikipedia.org with browser-harness, print snapshot(), click the search box with click_idx, and tell me
-what you saw.
+bash exactly as it is, without changing it. It backs up my agent workspace and my browser-harness skill file and
+checks each copy before it changes anything. If it prints "stopped", tell me why and change nothing. Then prove it
+works: open https://en.wikipedia.org with browser-harness, print snapshot(), click the search box with click_idx,
+and tell me what you saw.
 ```
+
+If a backup from an earlier install is still there, the script stops. Revert first, or move the old backup away.
+A browser-harness skill that came as a Claude Code plugin is not edited.
 
 ## Revert
 
-Revert puts the backup back in place of the whole workspace. Anything you added to the workspace after the install
-is lost, so copy it out first.
-
-With Claude:
+Revert puts every backup back: the agent workspace and the skill file. Anything you added to them after the install
+is lost, so copy it out first. Paste this into Claude Code:
 
 ```text
 Revert fast-browser-harness. Download https://raw.githubusercontent.com/<owner>/fast-browser-harness/main/revert.sh
-and show it to me. Before you run it, show me what is in agent-workspace and agent-workspace.bak and wait for my yes.
-Then run it with bash exactly as it is, and check that browser-harness still runs.
-```
-
-By hand:
-
-```bash
-WS="${BH_AGENT_WORKSPACE:-$HOME/.config/browser-harness/agent-workspace}"
-test -d "$WS.bak" \
-  && rm -rf "$WS" \
-  && mv "$WS.bak" "$WS" \
-  && echo "reverted: $WS is the backup again"
+and show it to me. Before you run it, show me which backups it will restore and wait for my yes. Then run it with
+bash exactly as it is, and check that browser-harness still runs.
 ```
 
 ## Credit
