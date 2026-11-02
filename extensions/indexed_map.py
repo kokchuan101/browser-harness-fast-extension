@@ -1,4 +1,4 @@
-# fast-browser-harness extension: indexed_map. snapshot(), click_idx(n) and type_idx(n, text): read the page as a numbered map, act by number.
+# browser-harness-fast-extension extension: indexed_map. snapshot(), click_idx(n) and type_idx(n, text): read the page as a numbered map, act by number.
 # Paste this whole file at the end of your browser-harness agent_helpers.py ($BH_AGENT_WORKSPACE, by default
 # ~/.config/browser-harness/agent-workspace/agent_helpers.py). Add frame_wait.py too, so clicks wait on the page; without it they do not wait.
 # Tested with browser-harness 0.1.13. Generated from fast_helpers.py by tests/build_extensions.py; edit fast_helpers.py,

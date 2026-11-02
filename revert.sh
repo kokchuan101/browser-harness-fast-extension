@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# fast-browser-harness revert: puts agent-workspace.bak back in place of the browser-harness agent workspace.
+# browser-harness-fast-extension revert: puts agent-workspace.bak back in place of the browser-harness agent workspace.
 # Anything added to the workspace after the install is lost.
 WS="${BH_AGENT_WORKSPACE:-$HOME/.config/browser-harness/agent-workspace}"
 test -d "$WS.bak" \

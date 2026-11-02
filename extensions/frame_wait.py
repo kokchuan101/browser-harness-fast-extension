@@ -1,4 +1,4 @@
-# fast-browser-harness extension: frame_wait. settle() and wait_until(js): wait on the page instead of a fixed sleep.
+# browser-harness-fast-extension extension: frame_wait. settle() and wait_until(js): wait on the page instead of a fixed sleep.
 # Paste this whole file at the end of your browser-harness agent_helpers.py ($BH_AGENT_WORKSPACE, by default
 # ~/.config/browser-harness/agent-workspace/agent_helpers.py). It needs no other extension.
 # Tested with browser-harness 0.1.13. Generated from fast_helpers.py by tests/build_extensions.py; edit fast_helpers.py,

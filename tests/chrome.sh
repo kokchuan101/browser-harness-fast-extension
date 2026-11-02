@@ -5,7 +5,7 @@
 # stop quits only the Chrome that uses this profile, never your daily Chrome.
 set -euo pipefail
 PORT="${FB_CHROME_PORT:-9444}"
-PROFILE="${FB_CHROME_PROFILE:-$HOME/.config/fast-browser-harness/chrome-profile}"
+PROFILE="${FB_CHROME_PROFILE:-$HOME/.config/browser-harness-fast-extension/chrome-profile}"
 up() { curl -sf "http://127.0.0.1:${PORT}/json/version" >/dev/null 2>&1; }
 case "${1:-start}" in
   start)

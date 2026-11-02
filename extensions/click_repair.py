@@ -1,4 +1,4 @@
-# fast-browser-harness extension: click_repair. click_name(name) and click_text(text): exact clicks that repair a miss safely.
+# browser-harness-fast-extension extension: click_repair. click_name(name) and click_text(text): exact clicks that repair a miss safely.
 # Paste this whole file at the end of your browser-harness agent_helpers.py ($BH_AGENT_WORKSPACE, by default
 # ~/.config/browser-harness/agent-workspace/agent_helpers.py). Add frame_wait.py too, so clicks wait on the page; without it they do not wait.
 # Tested with browser-harness 0.1.13. Generated from fast_helpers.py by tests/build_extensions.py; edit fast_helpers.py,

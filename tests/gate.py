@@ -5,7 +5,7 @@ import os
 import sys
 import time
 
-OUT = os.environ.get("FB_OUT", "/tmp/fast-browser-harness-out")
+OUT = os.environ.get("FB_OUT", "/tmp/browser-harness-fast-extension-out")
 results, opened = [], []
 
 

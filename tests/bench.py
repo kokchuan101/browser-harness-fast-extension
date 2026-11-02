@@ -103,7 +103,7 @@ for label, p in out["pages"].items():
         format(int(med(a, "chars_in_view")), ","), format(int(med(a, "chars_all")), ","), med(a, "png_kb"),
         med(m, "ms"), format(int(med(m, "chars")), ","), format(int(med(m, "chars_controls")), ","), int(med(m, "in_view")),
         p["two_frames_ms"]["no_focus_emulation"], p["two_frames_ms"]["focus_emulation"]))
-dest = os.path.join(os.environ.get("FB_OUT", "/tmp/fast-browser-harness-out"), "bench.json")
+dest = os.path.join(os.environ.get("FB_OUT", "/tmp/browser-harness-fast-extension-out"), "bench.json")
 os.makedirs(os.path.dirname(dest), exist_ok=True)
 with open(dest, "w") as f:
     json.dump(out, f, indent=1)

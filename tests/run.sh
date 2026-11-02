@@ -7,9 +7,9 @@
 # workspace) and its own daemon name, and the Chrome from tests/chrome.sh on port 9444. Stop it: tests/chrome.sh stop
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-VENV="${FAST_CACHE:-$HOME/.cache/fast-browser-harness}/upstream-venv"
+VENV="${FAST_CACHE:-$HOME/.cache/browser-harness-fast-extension}/upstream-venv"
 BH="$VENV/bin/browser-harness"
-export FB_OUT="${FB_OUT:-/tmp/fast-browser-harness-out}" BH_TELEMETRY=0 BU_NAME=fast-bh
+export FB_OUT="${FB_OUT:-/tmp/browser-harness-fast-extension-out}" BH_TELEMETRY=0 BU_NAME=fast-bh
 export BU_CDP_URL="${FAST_CDP_URL:-http://127.0.0.1:9444}"   # never inherit BU_CDP_URL: it may point at a shared Chrome
 
 in_home() {   # in_home SCRIPT: run SCRIPT with a fresh temporary BH_HOME, stop its daemon, remove the folder

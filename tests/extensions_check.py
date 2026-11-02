@@ -4,7 +4,7 @@ import os
 import time
 
 EXT = os.environ["EXT"]
-OUT = os.environ.get("FB_OUT", "/tmp/fast-browser-harness-out")
+OUT = os.environ.get("FB_OUT", "/tmp/browser-harness-fast-extension-out")
 OWN = {"frame_wait": ["settle", "wait_until"], "indexed_map": ["snapshot", "click_idx", "type_idx"],
        "click_repair": ["click_name", "click_text"], "marked_shot": ["capture_marked"]}
 ALL = sum(OWN.values(), [])

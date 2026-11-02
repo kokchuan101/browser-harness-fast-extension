@@ -35,7 +35,7 @@ def sections(text):
 
 def render(name, found):
     what, core, pairs = EXTENSIONS[name]
-    head = ("# fast-browser-harness extension: %s. %s\n"
+    head = ("# browser-harness-fast-extension extension: %s. %s\n"
             "# Paste this whole file at the end of your browser-harness agent_helpers.py ($BH_AGENT_WORKSPACE, by default\n"
             "# ~/.config/browser-harness/agent-workspace/agent_helpers.py). %s\n"
             "# Tested with browser-harness 0.1.13. Generated from fast_helpers.py by tests/build_extensions.py; edit fast_helpers.py,\n"

@@ -1,4 +1,4 @@
-# fast-browser-harness extension: marked_shot. capture_marked(path, marks): a screenshot with red boxes on chosen controls.
+# browser-harness-fast-extension extension: marked_shot. capture_marked(path, marks): a screenshot with red boxes on chosen controls.
 # Paste this whole file at the end of your browser-harness agent_helpers.py ($BH_AGENT_WORKSPACE, by default
 # ~/.config/browser-harness/agent-workspace/agent_helpers.py). Boxes by number ({'idx': n}) need indexed_map.py; CSS and text marks work alone.
 # Tested with browser-harness 0.1.13. Generated from fast_helpers.py by tests/build_extensions.py; edit fast_helpers.py,
