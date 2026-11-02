@@ -8,7 +8,7 @@ mkdir -p "$WS" \
   && cp -Rp "$WS" "$WS.bak" \
   && diff -r "$WS" "$WS.bak" \
   && echo "backup ok, identical copy: $WS.bak" \
-  && curl -fsSL https://raw.githubusercontent.com/<owner>/browser-harness-fast-extension/main/fast_helpers.py -o "$WS/fast_helpers.py" \
+  && curl -fsSL https://raw.githubusercontent.com/kokchuan101/browser-harness-fast-extension/main/fast_helpers.py -o "$WS/fast_helpers.py" \
   && echo >> "$WS/agent_helpers.py" \
   && sed -n 's/^#   \(import os as _o, sys as _s; .*\)$/\1/p' "$WS/fast_helpers.py" >> "$WS/agent_helpers.py" \
   && echo "installed: $WS/fast_helpers.py, and one load line at the end of $WS/agent_helpers.py"

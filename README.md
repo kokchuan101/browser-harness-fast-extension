@@ -61,7 +61,7 @@ Paste this into Claude Code:
 
 ```text
 Install browser-harness-fast-extension into my browser-harness. Download
-https://raw.githubusercontent.com/<owner>/browser-harness-fast-extension/main/install.sh, show it to me, then run it with
+https://raw.githubusercontent.com/kokchuan101/browser-harness-fast-extension/main/install.sh, show it to me, then run it with
 bash exactly as it is, without changing it. It backs up my agent workspace to agent-workspace.bak and checks the copy
 before it changes anything. If it prints "stopped", tell me why and change nothing. Then prove it works: open
 https://en.wikipedia.org with browser-harness, print snapshot(), click the search box with click_idx, and tell me
@@ -89,7 +89,7 @@ is lost, so copy it out first.
 With Claude:
 
 ```text
-Revert browser-harness-fast-extension. Download https://raw.githubusercontent.com/<owner>/browser-harness-fast-extension/main/revert.sh
+Revert browser-harness-fast-extension. Download https://raw.githubusercontent.com/kokchuan101/browser-harness-fast-extension/main/revert.sh
 and show it to me. Before you run it, show me what is in agent-workspace and agent-workspace.bak and wait for my yes.
 Then run it with bash exactly as it is, and check that browser-harness still runs.
 ```
