@@ -6,36 +6,27 @@ public pages, one look took 5 to 19 ms and one call. The accessibility-tree rout
 1,672 calls. The model only has to answer with a number, so a small model such as Claude Haiku can do it.
 
 ```text
-Before: browser-harness alone            After: with fast_all.py
+Before: browser-harness              After: with fast_all.py
 
-┌──────────────────────────────────┐     ┌──────────────────────────────────┐
-│ Read the accessibility tree,     │     │ Read the page as a numbered      │   kept from jev-ultrafast
-│ thousands of nodes               │     │ list, in one call                │
-└─────────────────┬────────────────┘     └─────────────────┬────────────────┘
-┌─────────────────▼────────────────┐     ┌─────────────────▼────────────────┐
-│ Look up the position of each     │     │ Your model answers with          │   replaces jev's paid model
-│ control, one call each           │     │ a number (Haiku is enough)       │
-└─────────────────┬────────────────┘     └─────────────────┬────────────────┘
-┌─────────────────▼────────────────┐     ┌─────────────────▼────────────────┐
-│ Model picks from a long list,    │     │ Check the control is still       │   kept from jev-ultrafast
-│ a screenshot if that fails       │     │ there and not covered,           │
-└─────────────────┬────────────────┘     │ then click it                    │
-┌─────────────────▼────────────────┐     └─────────────────┬────────────────┘
-│ Click at the position            │     ┌─────────────────▼────────────────┐
-└─────────────────┬────────────────┘     │ Wait until the page has drawn,   │   kept from jev-ultrafast
-┌─────────────────▼────────────────┐     │ two animation frames             │
-│ No built-in wait: the agent      │     └─────────────────┬────────────────┘
-│ sleeps or polls                  │     ┌─────────────────▼────────────────┐
-└─────────────────┬────────────────┘     │ On a miss, retry safely:         │   new here
-┌─────────────────▼────────────────┐     │ exactly one match or no click    │
-│ On a miss, the agent             │     └─────────────────┬────────────────┘
-│ retries by hand                  │     ┌─────────────────▼────────────────┐
-└──────────────────────────────────┘     │ Last, the original route:        │   kept from browser-harness
-                                         │ the accessibility tree           │
-                                         └──────────────────────────────────┘
+┌──────────────────────────────┐     ┌──────────────────────────────┐
+│ Read the full page tree      │     │ Read the page as a numbered  │  from jev-ultrafast
+└───────────────┬──────────────┘     │ list (1 call)                │
+┌───────────────▼──────────────┐     └───────────────┬──────────────┘
+│ Get the position of each     │     ┌───────────────▼──────────────┐
+│ control (1 call each)        │     │ Haiku selects a number       │  replaces a paid model
+└───────────────┬──────────────┘     └───────────────┬──────────────┘
+┌───────────────▼──────────────┐     ┌───────────────▼──────────────┐
+│ The model selects from       │     │ Make sure that the control   │  from jev-ultrafast
+│ a long list                  │     │ is clear. Then click it.     │
+└───────────────┬──────────────┘     └───────────────┬──────────────┘
+┌───────────────▼──────────────┐     ┌───────────────▼──────────────┐
+│ Click at the position        │     │ Wait until the page draws    │  from jev-ultrafast
+└───────────────┬──────────────┘     └──────────────────────────────┘
+┌───────────────▼──────────────┐
+│ Wait a fixed time            │
+└──────────────────────────────┘
 
-One look: 178 to 1,672 calls,            One look: 1 call, 5 to 19 ms
-0.3 to 10 seconds
+178 to 1,672 calls, 0.3 to 10 s      1 call, 5 to 19 ms
 ```
 
 ## What it changes
