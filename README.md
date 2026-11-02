@@ -39,12 +39,6 @@ Miss    │ The agent retries by hand  │   │ click_name(),              │ 
         │                            │   │ then the A11y tree. One    │
         │                            │   │ match only.                │
         └────────────────────────────┘   └────────────────────────────┘
-
-        ┌────────────────────────────┐   ┌────────────────────────────┐
-Covers  │ Full A11y data, including  │   │ Common HTML and ARIA       │  trade-off
-        │ shadow DOM                 │   │ controls. The A11y tree    │
-        │                            │   │ for the rest               │
-        └────────────────────────────┘   └────────────────────────────┘
 ```
 
 Your `browser-harness` command stays as it is. The helpers live in your agent workspace, next to your own.
