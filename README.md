@@ -7,45 +7,37 @@ public pages, one look took 5 to 19 ms and one call. The accessibility-tree rout
 
 ```mermaid
 flowchart LR
-  subgraph install["Install once (one Claude prompt)"]
+  subgraph before["Before: browser-harness alone"]
     direction TB
-    i1(["Paste the prompt"]) --> i2["1. Back up agent-workspace<br/>to agent-workspace.bak-date"]
-    i2 --> i3["2. Download fast_all.py<br/>into the workspace"]
-    i3 --> i4{"agent_helpers.py<br/>exists?"}
-    i4 -- no --> i5["Create it with<br/>the load line"]
-    i4 -- yes --> i6["Show the line,<br/>add it after your yes"]
-    i5 --> i7(["3. Prove it on Wikipedia"])
-    i6 --> i7
+    a1["Accessibility.getFullAXTree<br/>1 call"] --> a2["DOM.getBoxModel for each control<br/>178 to 1,672 calls"]
+    a2 --> a3["Screenshot"]
+    a3 --> a4["Model reads 5k to 50k characters<br/>and the image"]
+    a4 --> a5["click_at_xy(x, y)"]
+    a5 --> a6["Fixed sleep"]
+    a6 --> a7{"Did it work?"}
+    a7 -- yes --> a8(["Next step"])
+    a7 -- no --> a9["The agent retries by hand"]
   end
-  subgraph load["Every browser-harness call"]
+  subgraph after["After: with fast_all.py"]
     direction TB
-    l1["browser-harness runs a script"] --> l2["agent_helpers.py:<br/>your helpers + the load line"]
-    l2 --> l3{"fast_all.py<br/>found?"}
-    l3 -- yes --> l4(["snapshot, click_idx, settle ...<br/>ready in the script"])
-    l3 -- no --> l5["Warning only,<br/>browser-harness still works"]
-  end
-  subgraph step["Each step on a page"]
-    direction TB
-    s1["snapshot(): numbered map"] --> s2["Model picks a number<br/>or a name"]
+    s1["snapshot(): numbered map<br/>1 call"] --> s2["Model picks a number<br/>or a name"]
     s2 -- number --> s3{"click_idx: element still<br/>there, not covered?"}
-    s3 -- yes --> s4(["Click, then settle()"])
+    s3 -- yes --> s4(["Click, then settle():<br/>two animation frames"])
     s3 -- no --> s5["Nothing clicked:<br/>take a new snapshot"]
     s2 -- name --> s6["click_name: on a miss, try more time,<br/>another case, the visible text,<br/>then the accessibility tree"]
     s6 --> s7{"Exactly one<br/>match?"}
     s7 -- yes --> s4
     s7 -- no --> s8["Stop, nothing clicked"]
   end
-  install ~~~ load ~~~ step
-  classDef once fill:#fed7aa,stroke:#c2410c,color:#374151
+  before ~~~ after
   classDef ask fill:#fef3c7,stroke:#b45309,color:#374151
   classDef work fill:#93c5fd,stroke:#1e3a5f,color:#374151
+  classDef slow fill:#fee2e2,stroke:#dc2626,color:#374151
   classDef ok fill:#a7f3d0,stroke:#047857,color:#374151
-  classDef stop fill:#fee2e2,stroke:#dc2626,color:#374151
-  class i1,i2,i3,i5,i6 once
-  class i4,l3,s3,s7 ask
-  class l1,l2,s1,s2,s6 work
-  class i7,l4,s4 ok
-  class l5,s5,s8 stop
+  class a7,s3,s7 ask
+  class a1,a3,a4,a5,s1,s2,s6 work
+  class a2,a6,a9,s5,s8 slow
+  class a8,s4 ok
 ```
 
 ## What it changes
@@ -64,7 +56,41 @@ Your `browser-harness` command stays as it is. The helpers live in your agent wo
 
 ## Install
 
-The prompt backs up your whole agent workspace before it changes anything. Paste it into Claude Code:
+The prompt backs up your whole agent workspace before it changes anything.
+
+```mermaid
+flowchart LR
+  subgraph install["Install once (one Claude prompt)"]
+    direction TB
+    i1(["Paste the prompt"]) --> i2["1. Back up agent-workspace<br/>to agent-workspace.bak-date"]
+    i2 --> i3["2. Download fast_all.py<br/>into the workspace"]
+    i3 --> i4{"agent_helpers.py<br/>exists?"}
+    i4 -- no --> i5["Create it with<br/>the load line"]
+    i4 -- yes --> i6["Show the line,<br/>add it after your yes"]
+    i5 --> i7(["3. Prove it on Wikipedia"])
+    i6 --> i7
+  end
+  subgraph load["Every browser-harness call"]
+    direction TB
+    l1["browser-harness runs a script"] --> l2["agent_helpers.py:<br/>your helpers + the load line"]
+    l2 --> l3{"fast_all.py<br/>found?"}
+    l3 -- yes --> l4(["snapshot, click_idx, settle ...<br/>ready in the script"])
+    l3 -- no --> l5["Warning only,<br/>browser-harness still works"]
+  end
+  install ~~~ load
+  classDef once fill:#fed7aa,stroke:#c2410c,color:#374151
+  classDef ask fill:#fef3c7,stroke:#b45309,color:#374151
+  classDef work fill:#93c5fd,stroke:#1e3a5f,color:#374151
+  classDef ok fill:#a7f3d0,stroke:#047857,color:#374151
+  classDef stop fill:#fee2e2,stroke:#dc2626,color:#374151
+  class i1,i2,i3,i5,i6 once
+  class i4,l3 ask
+  class l1,l2 work
+  class i7,l4 ok
+  class l5 stop
+```
+
+Paste the prompt into Claude Code:
 
 ```text
 Add fast-browser-harness to my browser-harness. Back up first: copy my whole browser-harness agent workspace
