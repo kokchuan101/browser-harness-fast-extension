@@ -10,6 +10,8 @@
 #   numbered lines, `[n] role "name" =value state`, then the visible text. Prefer it to the accessibility tree and
 #   to screenshots. Shadow DOM, iframes and canvas content are not in it: when the target is not in the map, fall
 #   back to browser-harness's original route (the accessibility tree, the box of the node, click_at_xy).
+# - Let a Haiku subagent select the index: give it the snapshot and the goal, and ask for one line: [n], DONE or
+#   STUCK. If Haiku fails, ask a stronger LLM. Use each answer once. The answer is only a number, never code.
 # - Act by number: click_idx(n), or type_idx(n, "text", enter=True). A number is valid only for the last snapshot
 #   on that page. If its node is gone, disabled or covered, the call raises an error and clicks nothing.
 # - Wait on the page, never with a fixed sleep: settle() after input (two animation frames, at most 50 ms), or
