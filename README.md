@@ -10,19 +10,21 @@ Before: browser-harness              After: with fast_all.py
 
 ┌──────────────────────────────┐     ┌──────────────────────────────┐
 │ Read the full page tree      │     │ Read the page as a numbered  │  from jev-ultrafast
-└───────────────┬──────────────┘     │ list (1 call)                │
-┌───────────────▼──────────────┐     └───────────────┬──────────────┘
-│ Get the position of each     │     ┌───────────────▼──────────────┐
-│ control (1 call each)        │     │ The LLM selects an element   │  replaces paid Jev
-└───────────────┬──────────────┘     │ by number                    │
-┌───────────────▼──────────────┐     └───────────────┬──────────────┘
-│ The LLM selects from         │     ┌───────────────▼──────────────┐
-│ a long list                  │     │ Make sure that the control   │  from jev-ultrafast
-└───────────────┬──────────────┘     │ is clear. Then click it.     │
-┌───────────────▼──────────────┐     └───────────────┬──────────────┘
-│ Click at the position        │     ┌───────────────▼──────────────┐
-└───────────────┬──────────────┘     │ Wait until the page draws    │  from jev-ultrafast
-┌───────────────▼──────────────┐     └──────────────────────────────┘
+│                              │     │ list (1 call)                │
+└───────────────┬──────────────┘     └───────────────┬──────────────┘
+┌───────────────▼──────────────┐     ┌───────────────▼──────────────┐
+│ The LLM selects from         │     │ The LLM selects an element   │
+│ a long list                  │     │ by index (Haiku or a         │
+│                              │     │ stronger LLM)                │
+└───────────────┬──────────────┘     └───────────────┬──────────────┘
+┌───────────────▼──────────────┐     ┌───────────────▼──────────────┐
+│ Get the position of each     │     │ Make sure that the control   │  from jev-ultrafast
+│ control (1 call each)        │     │ is clear. Then click it.     │
+└───────────────┬──────────────┘     └───────────────┬──────────────┘
+┌───────────────▼──────────────┐     ┌───────────────▼──────────────┐
+│ Click at the position        │     │ Wait until the page draws    │  from jev-ultrafast
+└───────────────┬──────────────┘     └──────────────────────────────┘
+┌───────────────▼──────────────┐
 │ Wait a fixed time            │
 └──────────────────────────────┘
 
@@ -34,7 +36,7 @@ Before: browser-harness              After: with fast_all.py
 | Step | browser-harness alone | With `fast_all.py` | From |
 |---|---|---|---|
 | Read | Accessibility tree, then one position lookup per control | `snapshot()`: one call, a numbered list | jev-ultrafast |
-| Choose | The LLM selects from a long list | The LLM selects an element by number. Haiku is enough. Use a stronger LLM if it fails | Replaces jev-ultrafast's paid Jev |
+| Choose | The LLM selects from a long list | The LLM selects an element by index. Haiku is enough. Use a stronger LLM if it fails | Replaces jev-ultrafast's paid Jev |
 | Act | `click_at_xy(x, y)` | `click_idx(n)`: checks the control first | jev-ultrafast |
 | Wait | Nothing built in: the agent sleeps or polls | `settle()`: two animation frames | jev-ultrafast |
 | Miss | The agent retries by hand | `click_name()`: one exact match or no click | New |
