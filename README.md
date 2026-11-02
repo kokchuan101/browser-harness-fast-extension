@@ -8,14 +8,44 @@ Note: it modifies your current browser-harness. The installation backs it up fir
 
 ## What it changes
 
-| Step | browser-harness | With `fast_helpers.py` | From |
-|---|---|---|---|
-| Read | Read the full A11y tree, then get the position of the chosen control | `snapshot()`: read the DOM as an indexed list, in 1 call | jev-ultrafast |
-| Choose | The LLM selects from a long list | The LLM selects an element by index: Haiku, or a stronger LLM if Haiku fails | Replaces jev-ultrafast's paid Jev |
-| Act | `click_at_xy(x, y)` at that position | `click_idx(n)`: checks it is the same control and nothing covers it, then clicks | jev-ultrafast |
-| Wait | No built-in wait after a click. The agent sleeps or polls | `settle()`: waits until the page draws (two animation frames, at most 50 ms, with focus emulation so a background tab still draws). `wait_until(js)` for data that loads | jev-ultrafast |
-| Miss | The agent retries by hand | `click_name()`, `click_text()`: on a miss, more time under load, the same words in another case, the visible text or the accessible name, then the accessibility tree as before. They click only on exactly one match and print a `[fast recovered]` line | New |
-| Coverage | Full accessibility data, including shadow DOM | Common HTML and ARIA controls. The accessibility tree for the rest | Trade-off |
+```text
+        browser-harness                  with fast_helpers.py
+
+        ┌────────────────────────────┐   ┌────────────────────────────┐
+Read    │ Read the full A11y tree,   │   │ snapshot(): read the DOM   │  from jev-ultrafast
+        │ then get the position of   │   │ as an indexed list (1      │
+        │ the chosen control         │   │ call)                      │
+        └──────────────┬─────────────┘   └──────────────┬─────────────┘
+        ┌──────────────▼─────────────┐   ┌──────────────▼─────────────┐
+Choose  │ The LLM selects from a     │   │ The LLM selects an element │  replaces paid Jev
+        │ long list                  │   │ by index (Haiku, or a      │
+        │                            │   │ stronger LLM if it fails)  │
+        └──────────────┬─────────────┘   └──────────────┬─────────────┘
+        ┌──────────────▼─────────────┐   ┌──────────────▼─────────────┐
+Act     │ click_at_xy(x, y) at that  │   │ click_idx(n): check it is  │  from jev-ultrafast
+        │ position                   │   │ the same control and       │
+        │                            │   │ nothing covers it. Then    │
+        │                            │   │ click it.                  │
+        └──────────────┬─────────────┘   └──────────────┬─────────────┘
+        ┌──────────────▼─────────────┐   ┌──────────────▼─────────────┐
+Wait    │ No built-in wait after a   │   │ settle(): wait until the   │  from jev-ultrafast
+        │ click. The agent sleeps or │   │ page draws. wait_until(js) │
+        │ polls.                     │   │ for data that loads.       │
+        └──────────────┬─────────────┘   └──────────────┬─────────────┘
+        ┌──────────────▼─────────────┐   ┌──────────────▼─────────────┐
+Miss    │ The agent retries by hand  │   │ click_name(),              │  new
+        │                            │   │ click_text(): more time,   │
+        │                            │   │ other case, text or name,  │
+        │                            │   │ then the A11y tree. One    │
+        │                            │   │ match only.                │
+        └────────────────────────────┘   └────────────────────────────┘
+
+        ┌────────────────────────────┐   ┌────────────────────────────┐
+Covers  │ Full A11y data, including  │   │ Common HTML and ARIA       │  trade-off
+        │ shadow DOM                 │   │ controls. The A11y tree    │
+        │                            │   │ for the rest               │
+        └────────────────────────────┘   └────────────────────────────┘
+```
 
 Your `browser-harness` command stays as it is. The helpers live in your agent workspace, next to your own.
 
