@@ -1,7 +1,7 @@
 # fast-browser-harness: faster page reading for browser-harness, in one file.
 # Put this file in your browser-harness agent workspace ($BH_AGENT_WORKSPACE, by default
 # ~/.config/browser-harness/agent-workspace/) and load it from agent_helpers.py with this line:
-#   import os as _o, sys as _s; _f = _o.path.join(_o.path.dirname(_o.path.abspath(__file__)), "fast_all.py"); exec(compile(open(_f).read(), _f, "exec")) if _o.path.exists(_f) else print("fast-browser-harness: fast_all.py not found, fast helpers not loaded", file=_s.stderr)
+#   import os as _o, sys as _s; _f = _o.path.join(_o.path.dirname(_o.path.abspath(__file__)), "fast_helpers.py"); exec(compile(open(_f).read(), _f, "exec")) if _o.path.exists(_f) else print("fast-browser-harness: fast_helpers.py not found, fast helpers not loaded", file=_s.stderr)
 # Tested with browser-harness 0.1.13. Technique from jev-ultrafast (github.com/browser-use/jev-ultrafast).
 # The "# --- extension:" markers cut this file into the single extensions in extensions/ (tests/build_extensions.py).
 #
@@ -144,7 +144,7 @@ def _fast_focus():
 
 
 def _fast_after_action():
-    """Wait on the page with settle() when it is loaded (fast_all.py, or the frame_wait extension); otherwise do nothing."""
+    """Wait on the page with settle() when it is loaded (fast_helpers.py, or the frame_wait extension); otherwise do nothing."""
     fn = globals().get("settle")
     if fn:
         fn()

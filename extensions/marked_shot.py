@@ -1,7 +1,7 @@
 # fast-browser-harness extension: marked_shot. capture_marked(path, marks): a screenshot with red boxes on chosen controls.
 # Paste this whole file at the end of your browser-harness agent_helpers.py ($BH_AGENT_WORKSPACE, by default
 # ~/.config/browser-harness/agent-workspace/agent_helpers.py). Boxes by number ({'idx': n}) need indexed_map.py; CSS and text marks work alone.
-# Tested with browser-harness 0.1.13. Generated from fast_all.py by tests/build_extensions.py; edit fast_all.py,
+# Tested with browser-harness 0.1.13. Generated from fast_helpers.py by tests/build_extensions.py; edit fast_helpers.py,
 # not this file. Technique from jev-ultrafast (github.com/browser-use/jev-ultrafast).
 import json as _fast_json
 import time as _fast_time
@@ -124,7 +124,7 @@ def _fast_focus():
 
 
 def _fast_after_action():
-    """Wait on the page with settle() when it is loaded (fast_all.py, or the frame_wait extension); otherwise do nothing."""
+    """Wait on the page with settle() when it is loaded (fast_helpers.py, or the frame_wait extension); otherwise do nothing."""
     fn = globals().get("settle")
     if fn:
         fn()

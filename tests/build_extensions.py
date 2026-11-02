@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Copy each extension of fast_all.py into extensions/<name>.py, a standalone snippet for agent_helpers.py.
+"""Copy each extension of fast_helpers.py into extensions/<name>.py, a standalone snippet for agent_helpers.py.
 
     python3 tests/build_extensions.py           write the extensions
     python3 tests/build_extensions.py --check   exit 1 when an extension file is out of date
@@ -9,7 +9,7 @@ import re
 import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-SRC = os.path.join(ROOT, "fast_all.py")
+SRC = os.path.join(ROOT, "fast_helpers.py")
 OUT = os.path.join(ROOT, "extensions")
 
 # name: (what it adds, needs the shared page library, how it pairs with other extensions)
@@ -29,7 +29,7 @@ def sections(text):
     found = dict(re.findall(r"^# --- extension: (\w+)\n(.*?)^# --- end extension\n", text, re.S | re.M))
     missing = [n for n in ["core"] + list(EXTENSIONS) if n not in found]
     if missing:
-        raise SystemExit("fast_all.py has no extension named %s" % missing)
+        raise SystemExit("fast_helpers.py has no extension named %s" % missing)
     return found
 
 
@@ -38,7 +38,7 @@ def render(name, found):
     head = ("# fast-browser-harness extension: %s. %s\n"
             "# Paste this whole file at the end of your browser-harness agent_helpers.py ($BH_AGENT_WORKSPACE, by default\n"
             "# ~/.config/browser-harness/agent-workspace/agent_helpers.py). %s\n"
-            "# Tested with browser-harness 0.1.13. Generated from fast_all.py by tests/build_extensions.py; edit fast_all.py,\n"
+            "# Tested with browser-harness 0.1.13. Generated from fast_helpers.py by tests/build_extensions.py; edit fast_helpers.py,\n"
             "# not this file. Technique from jev-ultrafast (github.com/browser-use/jev-ultrafast).\n"
             % (name, what, pairs))
     return head + (found["core"] if core else "") + found[name]

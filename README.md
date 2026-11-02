@@ -1,14 +1,14 @@
 # fast-browser-harness
 
 fast-browser-harness makes [browser-harness](https://github.com/browser-use/browser-harness) agents read pages
-faster. One file, `fast_all.py`, adds helpers that read a page in one browser call and click by number. On three
+faster. One file, `fast_helpers.py`, adds helpers that read a page in one browser call and click by number. On three
 public pages, the indexed list of every control with its position took 5 to 19 ms and one call. The same list
 through the accessibility tree took 0.3 to 10 seconds and 178 to 1,672 calls. The tree alone already has
 thousands of nodes for the agent to filter. The LLM only has to answer with a number. Haiku is often enough. Use a
 stronger LLM if it fails.
 
 ```text
-Before: browser-harness              After: with fast_all.py
+Before: browser-harness              After: with fast_helpers.py
 
 ┌──────────────────────────────┐     ┌──────────────────────────────┐
 │ Read the full A11y tree      │     │ Read the DOM as an indexed   │  from jev-ultrafast
@@ -36,7 +36,7 @@ Before: browser-harness              After: with fast_all.py
 
 ## What it changes
 
-| Step | browser-harness alone | With `fast_all.py` | From |
+| Step | browser-harness alone | With `fast_helpers.py` | From |
 |---|---|---|---|
 | Read | Accessibility tree (the agent filters it), then a position lookup for the chosen control | `snapshot()`: one call, a numbered list | jev-ultrafast |
 | Choose | The LLM selects from a long list | The LLM selects an element by index. Haiku is often enough. Use a stronger LLM if it fails | Replaces jev-ultrafast's paid Jev |
@@ -51,14 +51,14 @@ Your `browser-harness` command stays as it is. The helpers live in your agent wo
 ## Install
 
 Install makes an exact backup of your agent workspace first and checks it. It changes nothing unless the backup is
-in place. The install can also help you write helpers for your own app, built on `fast_all.py`, in your own
+in place. The install can also help you write helpers for your own app, built on `fast_helpers.py`, in your own
 `agent_helpers.py`. Two files change, both in your browser-harness agent workspace:
 
 ```text
 ~/.config/browser-harness/          ($BH_AGENT_WORKSPACE, if you set it, replaces agent-workspace/)
 ├── agent-workspace/
 │   ├── agent_helpers.py            your helpers, plus one load line added at the end
-│   └── fast_all.py                 new: the helpers from this repository
+│   └── fast_helpers.py             new: the helpers from this repository
 └── agent-workspace.bak/            new: the backup, an identical copy made before any change
 ```
 
@@ -74,7 +74,7 @@ what you saw.
 
 When the check passes, ask me: "Do you want helpers for the web app you test day to day?" If I say no, stop.
 If yes:
-1. Read the HOW TO USE block at the top of fast_all.py, then my agent_helpers.py, and list the helpers I already
+1. Read the HOW TO USE block at the top of fast_helpers.py, then my agent_helpers.py, and list the helpers I already
    have. Reuse them; do not write a second version. A helper never stores a snapshot number: find the control
    by name or text with click_name() or click_text(), or take a snapshot inside the helper.
 2. Ask me for the app's URL, how I log in, and two or three flows I test often.
@@ -82,7 +82,7 @@ If yes:
    and wait_until(js) for the rest. Note the steps that repeat and the places where a click or wait failed.
 4. Add helpers only for those steps, in agent_helpers.py with an <app>_ prefix, built on snapshot(),
    click_name() and wait_until(). If one of my helpers sleeps for a fixed time or clicks by coordinates, offer
-   to switch it to wait_until() or click_name(), and change it only if I say yes. Never edit fast_all.py.
+   to switch it to wait_until() or click_name(), and change it only if I say yes. Never edit fast_helpers.py.
 5. Run the flows again, and show me the time and tool calls before and after.
 ```
 

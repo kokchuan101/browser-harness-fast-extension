@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# Test fast_all.py and extensions/ in plain browser-harness 0.1.13, without touching your own install or agent workspace.
-#   tests/run.sh gate    every helper, with fast_all.py loaded by its load line next to an existing agent_helpers.py
+# Test fast_helpers.py and extensions/ in plain browser-harness 0.1.13, without touching your own install or agent workspace.
+#   tests/run.sh gate    every helper, with fast_helpers.py loaded by its load line next to an existing agent_helpers.py
 #   tests/run.sh extensions   each extensions/*.py file alone, then all four together
 #   tests/run.sh bench   accessibility-tree route vs snapshot() on Wikipedia, GitHub and MDN
 # browser-harness 0.1.13 runs from its own venv, each run uses a temporary BH_HOME (config, daemon files, agent
@@ -25,10 +25,10 @@ python3 "$ROOT/tests/build_extensions.py" --check
 [ -x "$BH" ] || { uv venv -q "$VENV" && uv pip install -q --python "$VENV/bin/python" "browser-harness==0.1.13"; }
 "$ROOT/tests/chrome.sh" start
 case "${1:-}" in
-  gate|bench)   # fast_all.py next to an agent_helpers.py that has its own helper, loaded by the header's load line
+  gate|bench)   # fast_helpers.py next to an agent_helpers.py that has its own helper, loaded by the header's load line
     lines="$(mktemp)"; printf 'def my_own_helper():\n    return "mine"\n\n' > "$lines"
-    sed -n 's/^#   \(import os as _o, sys as _s; .*\)$/\1/p' "$ROOT/fast_all.py" >> "$lines"
-    AGENT_HELPERS="$lines" WORKSPACE_FILES="$ROOT/fast_all.py" in_home "$ROOT/tests/$1.py" || true
+    sed -n 's/^#   \(import os as _o, sys as _s; .*\)$/\1/p' "$ROOT/fast_helpers.py" >> "$lines"
+    AGENT_HELPERS="$lines" WORKSPACE_FILES="$ROOT/fast_helpers.py" in_home "$ROOT/tests/$1.py" || true
     rm -f "$lines" ;;
   extensions)
     out="$(mktemp)"

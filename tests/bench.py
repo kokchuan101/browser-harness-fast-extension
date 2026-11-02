@@ -1,10 +1,10 @@
 # Benchmark: the accessibility-tree route against the indexed map (snapshot), on the same public pages.
-# Run with tests/run.sh bench (plain browser-harness 0.1.13 with fast_all.py loaded). Each page: 3 runs per route in one background tab at 1120x780, medians.
+# Run with tests/run.sh bench (plain browser-harness 0.1.13 with fast_helpers.py loaded). Each page: 3 runs per route in one background tab at 1120x780, medians.
 # Prints a Markdown table and writes bench.json to $FB_OUT.
 #
 # Accessibility route = what an agent does without a map: Accessibility.getFullAXTree, then DOM.getBoxModel for each
 # interactive node to learn where it is, then a screenshot to see the page.
-# Indexed map = snapshot() from fast_all.py: one Runtime.evaluate returns the numbered controls in view plus the visible text.
+# Indexed map = snapshot() from fast_helpers.py: one Runtime.evaluate returns the numbered controls in view plus the visible text.
 import json
 import os
 import statistics as st

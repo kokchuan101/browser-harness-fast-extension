@@ -1,5 +1,5 @@
-# Gate for fast_all.py on public pages (Wikipedia, GitHub), in plain browser-harness 0.1.13.
-# Run with tests/run.sh gate: fast_all.py is loaded by its load line from an agent_helpers.py that has its own helper.
+# Gate for fast_helpers.py on public pages (Wikipedia, GitHub), in plain browser-harness 0.1.13.
+# Run with tests/run.sh gate: fast_helpers.py is loaded by its load line from an agent_helpers.py that has its own helper.
 # Prints PASS/FAIL lines and "GATE x/y". Live pages change: read a FAIL's detail before blaming a helper.
 import os
 import sys
@@ -53,7 +53,7 @@ def t_load():
     own = sorted(f for f in os.listdir(paths.workspace_dir()) if not f.startswith("__"))
     missing = [n for n in NAMES if n not in globals()]
     mine = "my_own_helper" in globals() and my_own_helper() == "mine"
-    return not missing and mine and own == ["agent_helpers.py", "fast_all.py"], \
+    return not missing and mine and own == ["agent_helpers.py", "fast_helpers.py"], \
         "missing %s; own helper still works: %s; workspace files %s" % (missing, mine, own)
 check("load: the load line adds every helper and keeps the user's own", t_load)
 

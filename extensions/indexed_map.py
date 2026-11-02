@@ -1,7 +1,7 @@
 # fast-browser-harness extension: indexed_map. snapshot(), click_idx(n) and type_idx(n, text): read the page as a numbered map, act by number.
 # Paste this whole file at the end of your browser-harness agent_helpers.py ($BH_AGENT_WORKSPACE, by default
 # ~/.config/browser-harness/agent-workspace/agent_helpers.py). Add frame_wait.py too, so clicks wait on the page; without it they do not wait.
-# Tested with browser-harness 0.1.13. Generated from fast_all.py by tests/build_extensions.py; edit fast_all.py,
+# Tested with browser-harness 0.1.13. Generated from fast_helpers.py by tests/build_extensions.py; edit fast_helpers.py,
 # not this file. Technique from jev-ultrafast (github.com/browser-use/jev-ultrafast).
 import json as _fast_json
 import time as _fast_time
@@ -124,7 +124,7 @@ def _fast_focus():
 
 
 def _fast_after_action():
-    """Wait on the page with settle() when it is loaded (fast_all.py, or the frame_wait extension); otherwise do nothing."""
+    """Wait on the page with settle() when it is loaded (fast_helpers.py, or the frame_wait extension); otherwise do nothing."""
     fn = globals().get("settle")
     if fn:
         fn()
