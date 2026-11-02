@@ -3,7 +3,7 @@
 fast-browser-harness makes [browser-harness](https://github.com/browser-use/browser-harness) agents read pages
 faster. One file, `fast_all.py`, adds helpers that read a page in one browser call and click by number. On three
 public pages, one look took 5 to 19 ms and one call. The accessibility-tree route took 0.3 to 10 seconds and 178 to
-1,672 calls. The model only has to answer with a number, so a small model such as Claude Haiku can do it.
+1,672 calls. The LLM only has to answer with a number, so a small LLM such as Claude Haiku can do it.
 
 ```text
 Before: browser-harness              After: with fast_all.py
@@ -13,17 +13,17 @@ Before: browser-harness              After: with fast_all.py
 └───────────────┬──────────────┘     │ list (1 call)                │
 ┌───────────────▼──────────────┐     └───────────────┬──────────────┘
 │ Get the position of each     │     ┌───────────────▼──────────────┐
-│ control (1 call each)        │     │ The model selects an element │  replaces a paid model
-└───────────────┬──────────────┘     │ (Haiku, or a stronger model  │
-┌───────────────▼──────────────┐     │ if Haiku fails)              │
-│ The model selects from       │     └───────────────┬──────────────┘
-│ a long list                  │     ┌───────────────▼──────────────┐
-└───────────────┬──────────────┘     │ Make sure that the control   │  from jev-ultrafast
-┌───────────────▼──────────────┐     │ is clear. Then click it.     │
-│ Click at the position        │     └───────────────┬──────────────┘
-└───────────────┬──────────────┘     ┌───────────────▼──────────────┐
-┌───────────────▼──────────────┐     │ Wait until the page draws    │  from jev-ultrafast
-│ Wait a fixed time            │     └──────────────────────────────┘
+│ control (1 call each)        │     │ The LLM selects an element   │  replaces a paid classifier
+└───────────────┬──────────────┘     │ by number                    │
+┌───────────────▼──────────────┐     └───────────────┬──────────────┘
+│ The LLM selects from         │     ┌───────────────▼──────────────┐
+│ a long list                  │     │ Make sure that the control   │  from jev-ultrafast
+└───────────────┬──────────────┘     │ is clear. Then click it.     │
+┌───────────────▼──────────────┐     └───────────────┬──────────────┘
+│ Click at the position        │     ┌───────────────▼──────────────┐
+└───────────────┬──────────────┘     │ Wait until the page draws    │  from jev-ultrafast
+┌───────────────▼──────────────┐     └──────────────────────────────┘
+│ Wait a fixed time            │
 └──────────────────────────────┘
 
 178 to 1,672 calls, 0.3 to 10 s      1 call, 5 to 19 ms
@@ -34,7 +34,7 @@ Before: browser-harness              After: with fast_all.py
 | Step | browser-harness alone | With `fast_all.py` | From |
 |---|---|---|---|
 | Read | Accessibility tree, then one position lookup per control | `snapshot()`: one call, a numbered list | jev-ultrafast |
-| Choose | The model selects from a long list | The model selects an element by number: Haiku, or a stronger model if Haiku fails | Replaces jev-ultrafast's paid model |
+| Choose | The LLM selects from a long list | The LLM selects an element by number. Haiku is enough. Use a stronger LLM if it fails | Replaces jev-ultrafast's paid classifier |
 | Act | `click_at_xy(x, y)` | `click_idx(n)`: checks the control first | jev-ultrafast |
 | Wait | Nothing built in: the agent sleeps or polls | `settle()`: two animation frames | jev-ultrafast |
 | Miss | The agent retries by hand | `click_name()`: one exact match or no click | New |
