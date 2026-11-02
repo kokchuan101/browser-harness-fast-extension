@@ -74,7 +74,9 @@ what you saw.
 
 When the check passes, ask me: "Do you want helpers for the web app you test day to day?" If I say no, stop.
 If yes:
-1. Read my agent_helpers.py and list the helpers I already have. Reuse them; do not write a second version.
+1. Read the HOW TO USE block at the top of fast_all.py, then my agent_helpers.py, and list the helpers I already
+   have. Reuse them; do not write a second version. A helper never stores a snapshot number: find the control
+   by name or text with click_name() or click_text(), or take a snapshot inside the helper.
 2. Ask me for the app's URL, how I log in, and two or three flows I test often.
 3. Run each flow once with my browser-harness, using my helpers where they fit and snapshot(), click_idx(n)
    and wait_until(js) for the rest. Note the steps that repeat and the places where a click or wait failed.
