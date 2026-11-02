@@ -7,6 +7,13 @@ through the accessibility tree took 0.3 to 10 seconds and 178 to 1,672 calls. Th
 thousands of nodes for the agent to filter. The LLM only has to answer with a number. Haiku is often enough. Use a
 stronger LLM if it fails.
 
+Whole tasks, run by a Haiku agent with and without `fast_helpers.py`:
+
+| Task | Without | With | Runs |
+|---|---|---|---|
+| Follow links three pages deep on Wikipedia | 73 to 86 s, 17 to 20 tool calls | 21 to 25 s, 8 tool calls | 2 each |
+| Build a 6-block workflow in a canvas web app | 578 s, 230k tokens, 125 tool calls | 491 s, 159k tokens, 99 tool calls | 1 each |
+
 ```text
 Before: browser-harness              After: with fast_helpers.py
 
@@ -42,7 +49,7 @@ Before: browser-harness              After: with fast_helpers.py
 | Choose | The LLM selects from a long list | The LLM selects an element by index. Haiku is often enough. Use a stronger LLM if it fails | Replaces jev-ultrafast's paid Jev |
 | Act | `click_at_xy(x, y)` | `click_idx(n)`: checks the control first | jev-ultrafast |
 | Wait | Nothing built in after a click: the agent sleeps or polls | `settle()`: two animation frames, at most 50 ms, with focus emulation so a background tab still draws. `wait_until(js)` for data that loads | jev-ultrafast |
-| Miss | The agent retries by hand | `click_name()`, `click_text()`: on a miss, more time under load, the same name in another case, the visible text, then the accessibility tree. They click only on exactly one match and print a `[fast recovered]` line | New |
+| Miss | The agent retries by hand | `click_name()`, `click_text()`: on a miss, more time under load, the same words in another case, the visible text or the accessible name, then the accessibility tree. They click only on exactly one match and print a `[fast recovered]` line | New |
 | Last resort | | The accessibility tree, as before | browser-harness |
 | Coverage | Full accessibility data, including shadow DOM | Common HTML and ARIA controls. The accessibility tree for the rest | Trade-off |
 
